@@ -61,7 +61,7 @@ export default function TasksPage() {
         ) : tasks.length === 0 ? (
           <div className="text-center p-8 text-muted-foreground flex flex-col items-center">
             <CheckCircle2 className="w-12 h-12 mb-3 text-emerald-500/30" />
-            <p>You're all caught up!</p>
+            <p>You&apos;re all caught up!</p>
           </div>
         ) : (
           <div className="space-y-3">

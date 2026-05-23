@@ -93,7 +93,7 @@ export default function VisitsPage() {
                   
                   {visit.notes && (
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-2 italic bg-muted/50 p-2 rounded-md">
-                      "{visit.notes}"
+                      &quot;{visit.notes}&quot;
                     </p>
                   )}
 
