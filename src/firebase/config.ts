@@ -12,8 +12,11 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase (prevent re-initialization in dev)
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+// Initialize Firebase with fallback to prevent build-time crashes if environment variables are missing
+const isConfigValid = !!firebaseConfig.apiKey;
+const app = isConfigValid
+  ? (getApps().length === 0 ? initializeApp(firebaseConfig) : getApp())
+  : (getApps().length === 0 ? initializeApp({ apiKey: "mock-api-key-for-build", projectId: "mock-project-id" }) : getApp());
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
