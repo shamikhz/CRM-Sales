@@ -36,7 +36,7 @@ export function VisitForm({ onSuccess }: VisitFormProps) {
   useEffect(() => {
     if (!user) return;
     const unsub = subscribeToCollection(COLLECTIONS.CUSTOMERS, (data) => {
-      const allCustomers = data as Customer[];
+      const allCustomers = data as unknown as Customer[];
       setCustomers(allCustomers.filter(c => c.assignedExecutive === user.uid));
     });
     return () => unsub();

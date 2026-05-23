@@ -24,7 +24,7 @@ export default function CustomersPage() {
   useEffect(() => {
     if (!user) return;
     const unsub = subscribeToCollection(COLLECTIONS.CUSTOMERS, (data) => {
-      const allCustomers = data as Customer[];
+      const allCustomers = data as unknown as Customer[];
       // Filter customers assigned to this sales executive
       const myCustomers = allCustomers.filter(c => c.assignedExecutive === user.uid);
       setCustomers(myCustomers.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));

@@ -25,7 +25,7 @@ export default function VisitsPage() {
   useEffect(() => {
     if (!user) return;
     const unsub = subscribeToCollection(COLLECTIONS.VISITS, (data) => {
-      const allVisits = data as Visit[];
+      const allVisits = data as unknown as Visit[];
       const myVisits = allVisits.filter(v => v.salesExecutiveId === user.uid);
       setVisits(myVisits.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));
       setIsLoading(false);

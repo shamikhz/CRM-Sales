@@ -26,7 +26,7 @@ export default function OrdersPage() {
   useEffect(() => {
     if (!user) return;
     const unsub = subscribeToCollection(COLLECTIONS.ORDERS, (data) => {
-      const allOrders = data as Order[];
+      const allOrders = data as unknown as Order[];
       const myOrders = allOrders.filter(o => o.salesExecutiveId === user.uid);
       setOrders(myOrders.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));
       setIsLoading(false);

@@ -21,7 +21,7 @@ export default function TasksPage() {
   useEffect(() => {
     if (!user) return;
     const unsub = subscribeToCollection(COLLECTIONS.TASKS, (data) => {
-      const allTasks = data as Task[];
+      const allTasks = data as unknown as Task[];
       const myTasks = allTasks.filter(t => t.assignedTo === user.uid);
       
       // Sort: pending first, then by due date

@@ -22,7 +22,7 @@ export default function AttendancePage() {
   useEffect(() => {
     if (!user) return;
     const unsub = subscribeToCollection(COLLECTIONS.ATTENDANCE, (data) => {
-      const allRecords = data as AttendanceRecord[];
+      const allRecords = data as unknown as AttendanceRecord[];
       const myRecords = allRecords.filter(r => r.userId === user.uid);
       const sorted = myRecords.sort((a, b) => b.checkIn.getTime() - a.checkIn.getTime());
       

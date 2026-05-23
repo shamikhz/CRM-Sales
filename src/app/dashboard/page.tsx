@@ -37,7 +37,7 @@ export default function DashboardHome() {
     const unsubCustomers = subscribeToCollection(
       COLLECTIONS.CUSTOMERS,
       (data) => {
-        const customers = data as Customer[];
+        const customers = data as unknown as Customer[];
         const myCustomers = customers.filter(c => c.assignedExecutive === user.uid);
         customersCount = myCustomers.length;
         setStats(s => ({ ...s, customers: customersCount }));
@@ -48,7 +48,7 @@ export default function DashboardHome() {
     const unsubOrders = subscribeToCollection(
       COLLECTIONS.ORDERS,
       (data) => {
-        const orders = data as Order[];
+        const orders = data as unknown as Order[];
         const myOrders = orders.filter(o => o.salesExecutiveId === user.uid);
         ordersCount = myOrders.length;
         setStats(s => ({ ...s, orders: ordersCount }));
@@ -59,7 +59,7 @@ export default function DashboardHome() {
     const unsubTasks = subscribeToCollection(
       COLLECTIONS.TASKS,
       (data) => {
-        const tasks = data as Task[];
+        const tasks = data as unknown as Task[];
         const myPendingTasks = tasks.filter(t => t.assignedTo === user.uid && t.status !== 'completed');
         tasksCount = myPendingTasks.length;
         setStats(s => ({ ...s, tasks: tasksCount }));
@@ -70,7 +70,7 @@ export default function DashboardHome() {
     const unsubVisits = subscribeToCollection(
       COLLECTIONS.VISITS,
       (data) => {
-        const visits = data as Visit[];
+        const visits = data as unknown as Visit[];
         const myVisits = visits.filter(v => v.salesExecutiveId === user.uid);
         visitsCount = myVisits.length;
         setStats(s => ({ ...s, visits: visitsCount }));
