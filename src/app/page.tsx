@@ -79,7 +79,7 @@ export default function LoginPage() {
 
   const handleDemoLogin = () => {
     setEmail('executive1@fieldforce.demo');
-    setPassword('demo123');
+    setPassword('executive@1234');
   };
 
   if (isLoading) {
