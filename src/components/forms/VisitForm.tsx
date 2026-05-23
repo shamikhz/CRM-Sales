@@ -112,7 +112,7 @@ export function VisitForm({ onSuccess }: VisitFormProps) {
         <Label>Customer</Label>
         <Select 
           onValueChange={(val) => {
-            form.setValue('customerId', val);
+            form.setValue('customerId', val || undefined);
             form.clearErrors('customerId');
           }}
           defaultValue={form.getValues('customerId')}
