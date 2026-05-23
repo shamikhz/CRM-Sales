@@ -17,9 +17,13 @@ import { toast } from 'sonner';
 import type { Customer } from '@/types';
 
 const visitSchema = z.object({
-  customerId: z.string().min(1, 'Customer is required'),
+  customerId: z.string().optional(),
+  customerName: z.string().optional(),
   visitPurpose: z.string().min(2, 'Visit purpose is required'),
   notes: z.string().optional(),
+}).refine(data => data.customerId || data.customerName, {
+  message: "Please select a customer or enter a name manually",
+  path: ["customerId"]
 });
 
 type VisitFormValues = z.infer<typeof visitSchema>;
@@ -46,6 +50,7 @@ export function VisitForm({ onSuccess }: VisitFormProps) {
     resolver: zodResolver(visitSchema),
     defaultValues: {
       customerId: '',
+      customerName: '',
       visitPurpose: '',
       notes: '',
     },
@@ -57,6 +62,8 @@ export function VisitForm({ onSuccess }: VisitFormProps) {
 
     try {
       const customer = customers.find(c => c.id === data.customerId);
+      const finalCustomerName = customer?.shopName || data.customerName || 'Unknown';
+      const finalCustomerId = data.customerId || 'manual-entry';
 
       // Attempt to get GPS
       let gpsLocation = { latitude: 0, longitude: 0 };
@@ -75,8 +82,8 @@ export function VisitForm({ onSuccess }: VisitFormProps) {
       }
 
       await createDocument(COLLECTIONS.VISITS, {
-        customerId: data.customerId,
-        customerName: customer?.shopName || 'Unknown',
+        customerId: finalCustomerId,
+        customerName: finalCustomerName,
         salesExecutiveId: user.uid,
         salesExecutiveName: user.name,
         visitPurpose: data.visitPurpose,
@@ -101,14 +108,17 @@ export function VisitForm({ onSuccess }: VisitFormProps) {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-      <div className="space-y-2">
+      <div className="space-y-3">
         <Label>Customer</Label>
         <Select 
-          onValueChange={(val) => form.setValue('customerId', val)}
+          onValueChange={(val) => {
+            form.setValue('customerId', val);
+            form.clearErrors('customerId');
+          }}
           defaultValue={form.getValues('customerId')}
         >
           <SelectTrigger className="rounded-xl h-11">
-            <SelectValue placeholder="Select a customer" />
+            <SelectValue placeholder="Select existing customer" />
           </SelectTrigger>
           <SelectContent>
             {customers.map(c => (
@@ -116,6 +126,18 @@ export function VisitForm({ onSuccess }: VisitFormProps) {
             ))}
           </SelectContent>
         </Select>
+        
+        <div className="relative flex items-center py-1">
+          <div className="flex-grow border-t border-border"></div>
+          <span className="flex-shrink-0 mx-2 text-xs text-muted-foreground uppercase font-medium">Or</span>
+          <div className="flex-grow border-t border-border"></div>
+        </div>
+
+        <Input 
+          placeholder="Enter new customer name manually" 
+          {...form.register('customerName')} 
+          className="rounded-xl h-11"
+        />
         {errors.customerId && <p className="text-sm text-destructive">{errors.customerId.message}</p>}
       </div>
 
