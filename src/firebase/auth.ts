@@ -46,7 +46,8 @@ export async function getCurrentUserProfile(email: string | null, uid: string): 
   // First try direct lookup by UID (in case it matches)
   const userDoc = await getDoc(doc(db, 'users', uid));
   if (userDoc.exists()) {
-    return { id: userDoc.id, ...userDoc.data() } as User;
+    const data = userDoc.data();
+    return { id: userDoc.id, uid: data.uid || userDoc.id, ...data } as User;
   }
 
   // If not found, query by email (Admin dashboard might use random doc IDs)
@@ -54,7 +55,8 @@ export async function getCurrentUserProfile(email: string | null, uid: string): 
   const snapshot = await getDocs(q);
   if (!snapshot.empty) {
     const docSnap = snapshot.docs[0];
-    return { id: docSnap.id, ...docSnap.data() } as User;
+    const data = docSnap.data();
+    return { id: docSnap.id, uid: data.uid || docSnap.id, ...data } as User;
   }
 
   return null;
